@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="parcial1.tresenraya.com.juegotresenraya.MainActivity">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo" />
+
+    <Button
+        android:id="@+id/btn_unJugador"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryLight"
+        android:padding="15dp"
+        android:text="Un Jugador" />
+    <Button
+        android:id="@+id/btn_Multijugador"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Multijugador"
+        android:padding="15dp"
+        android:background="@color/colorPrimaryLight"/>
+
+    <Button
+        android:id="@+id/btn_Estadisticas"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryLight"
+        android:padding="15dp"
+        android:text="Estadisticas" />
+</LinearLayout>
