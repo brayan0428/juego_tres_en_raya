@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Asignamos el evento a los botones
         btn_UnJugador.setOnClickListener(this);
         btn_Multijugador.setOnClickListener(this);
+        btn_Estadisticas.setOnClickListener(this);
     }
 
     @Override
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent_2 = new Intent(getApplicationContext(),JuegoActivity.class);
                 intent_2.putExtra("Parametro",2);
                 startActivity(intent_2);
+                break;
+            case R.id.btn_Estadisticas:
+                Intent intent_3 = new Intent(getApplicationContext(),EstadisticasActivity.class);
+                startActivity(intent_3);
                 break;
         }
     }

@@ -1,6 +1,8 @@
 package parcial1.tresenraya.com.juegotresenraya;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +50,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         rb_Avanzado = findViewById(R.id.rb_Avanzado);
         iniciarTablero();
 
+        inicializarSharedPreferences();
+
         //Asignamos el evento click a los botones
         btn_uno.setOnClickListener(this);
         btn_dos.setOnClickListener(this);
@@ -59,6 +63,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         btn_ocho.setOnClickListener(this);
         btn_nueve.setOnClickListener(this);
         btn_reiniciar.setOnClickListener(this);
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -92,6 +97,10 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if(view.getId() != R.id.reiniciar){
+            if(validarPosicionLlena(view) == false){
+                mostrarMensaje("Debe seleccionar otra posiciòn");
+                return;
+            }
             turno++;
             if(Parametro == 1){
                 turnoJugador(view,"X",1);
@@ -143,7 +152,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
     private void turnoMaquina(){
         try{
-            if (turno == 5 || validarGanador() != -1){
+            if (turno == 5 || validarGanador() != -1 || validarTableroLleno()){
                 return;
             }
             boolean colocar = false;
@@ -294,13 +303,16 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         rb_Facil.setEnabled(true);
         rb_Intermedio.setEnabled(true);
         rb_Avanzado.setEnabled(true);
+        rb_Facil.setChecked(true);
+        rb_Intermedio.setChecked(false);
+        rb_Avanzado.setChecked(false);
         cuenta_regresiva.setText("");
+        turno = 0;
     }
 
     public class Contador extends CountDownTimer{
         public Contador(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
-            reiniciar();
         }
 
         @Override
@@ -332,5 +344,20 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public boolean validarPosicionLlena(View v){
+        Button button = findViewById(v.getId());
+        if (button.getText().toString() == ""){
+            return true;
+        }
+        return false;
+    }
+
+    public void inicializarSharedPreferences(){
+        SharedPreferences sharedPreferences = getSharedPreferences("Estadisticas", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("Num_Partidas",25);
+        editor.commit();
     }
 }
