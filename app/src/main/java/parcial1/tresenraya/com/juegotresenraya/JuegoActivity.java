@@ -50,8 +50,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         rb_Avanzado = findViewById(R.id.rb_Avanzado);
         iniciarTablero();
 
-        inicializarSharedPreferences();
-
+        turno = 0;
         //Asignamos el evento click a los botones
         btn_uno.setOnClickListener(this);
         btn_dos.setOnClickListener(this);
@@ -102,6 +101,9 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
             turno++;
+            if(turno == 1){
+                editarPreferencias("NumPartidas");
+            }
             if(Parametro == 1){
                 turnoJugador(view,"X",1);
                 turnoMaquina();
@@ -116,8 +118,14 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
         if (validarGanador() != -1){
             if (validarGanador() == 1){
+                editarPreferencias("NumPartidasGanadas1");
                 mostrarMensaje("Ha ganado el Jugador 1");
             }else{
+                if(Parametro == 1){
+                    editarPreferencias("NumPartidasGanadasMaquina");
+                }else{
+                    editarPreferencias("NumPartidasGanadas2");
+                }
                 mostrarMensaje("Ha ganado el Jugador 2");
             }
             cancelarContador();
@@ -125,12 +133,18 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
         if(validarTableroLleno() == true && validarGanador() == -1){
             mostrarMensaje("Empate");
+            editarPreferencias("NumPartidasCerradas");
             cancelarContador();
             retornarMain();
             return;
         }
     }
 
+    @Override
+    protected void onPause() {
+        cancelarContador();
+        super.onPause();
+    }
 
     //Funcionar para inicializar todos los valores del tablero en -1
     public void iniciarTablero(){
@@ -290,6 +304,9 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void reiniciar(){
+        if(validarGanador() == -1){
+            editarPreferencias("NumPartidasCerradas");
+        }
         iniciarTablero();
         btn_uno.setText("");
         btn_dos.setText("");
@@ -354,10 +371,11 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         return false;
     }
 
-    public void inicializarSharedPreferences(){
-        SharedPreferences sharedPreferences = getSharedPreferences("Estadisticas", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("Num_Partidas",25);
+    public void editarPreferencias(String variable){
+        SharedPreferences preferences = getSharedPreferences("Estadisticas",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        int cantidad = preferences.getInt(variable,0) + 1;
+        editor.putInt(variable,cantidad);
         editor.commit();
     }
 }
