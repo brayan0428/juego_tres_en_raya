@@ -106,7 +106,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             }
             if(Parametro == 1){
                 turnoJugador(view,"X",1);
-                turnoMaquina();
+                //turnoMaquina();
+                turnoMaquina2();
             }else{
                 if (op_letra.equals("X")) turnoJugador(view,op_letra,1);
                 else turnoJugador(view,op_letra,2);
@@ -220,7 +221,113 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             mostrarMensaje(e.getMessage());
         }
     }
+    /*INICIO ALGORITMO MINIMAX*/
+        private void turnoMaquina2(){
+            try{
+                if (turno == 5 || validarGanador() != -1 || validarTableroLleno()){
+                    return;
+                }
+                int f=0,c=0;
+                int v = Integer.MIN_VALUE;
+                int aux;
+                for(int x=0;x<3;x++){
+                    for(int y=0;y<3;y++){
+                        if(Tablero[x][y] == -1){
+                            Tablero[x][y] = 2;
+                            aux = min();
+                            if(aux > v){
+                                v = aux;
+                                f = x;
+                                c = y;
+                            }
+                            Tablero[x][y] = -1;
+                        }
+                    }
+                }
+                Tablero[f][c] = 2;
+                switch (f){
+                    case 0:
+                        if(c == 0){
+                            btn_uno.setText("O");
+                        }
+                        if(c == 1){
+                            btn_dos.setText("O");
+                        }
+                        if(c == 2){
+                            btn_tres.setText("O");
+                        }
+                        break;
+                    case 1:
+                        if(c == 0){
+                            btn_cuatro.setText("O");
+                        }
+                        if(c == 1){
+                            btn_cinco.setText("O");
+                        }
+                        if(c == 2){
+                            btn_seis.setText("O");
+                        }
+                        break;
+                    case 2:
+                        if(c == 0){
+                            btn_siete.setText("O");
+                        }
+                        if(c == 1){
+                            btn_ocho.setText("O");
+                        }
+                        if(c == 2){
+                            btn_nueve.setText("O");
+                        }
+                        break;
+                }
+            }catch (Exception e){
+                mostrarMensaje(e.getMessage());
+            }
+        }
 
+        private int max(){
+            if(validarTableroLleno() || validarGanador() != -1){
+                if(validarGanador() != -1) return -1;
+                else return 0;
+            }
+            int v = Integer.MIN_VALUE;
+            int aux;
+            for(int x=0;x<3;x++) {
+                for (int y = 0; y < 3; y++) {
+                    if (Tablero[x][y] == -1) {
+                        Tablero[x][y] = 2;
+                        aux = min();
+                        if (aux > v) {
+                            v = aux;
+                        }
+                        Tablero[x][y] = -1;
+                    }
+                }
+            }
+            return v;
+        }
+        private int min(){
+            if(validarTableroLleno()|| validarGanador() != -1){
+                if(validarGanador() != -1) return 2;
+                else return 0;
+            }
+            int v = Integer.MAX_VALUE;
+            int aux;
+            for(int x=0;x<3;x++) {
+                for (int y = 0; y < 3; y++) {
+                    if (Tablero[x][y] == -1) {
+                        Tablero[x][y] = 1;
+                        aux = max();
+                        if (aux < v) {
+                            v = aux;
+                        }
+                        Tablero[x][y] = -1;
+                    }
+                }
+            }
+            return v;
+        }
+    /*FIN ALGORITMO MINIMAX*/
     public int validarGanador(){
         try{
             //Verificamos la diagonal \
@@ -325,6 +432,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         rb_Avanzado.setChecked(false);
         cuenta_regresiva.setText("");
         turno = 0;
+        op_letra = "X";
     }
 
     public class Contador extends CountDownTimer{
